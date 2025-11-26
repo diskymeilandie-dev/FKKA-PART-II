@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Platform Komunitas & Kegiatan Siswa</title>
+  <style>
+:root{--accent:#4a7a5c;--bg:#ffffff;--card:#fff;--muted:#666}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI, Roboto, Arial, sans-serif;background:var(--bg);color:#222}
+.container{max-width:1000px;margin:0 auto;padding:20px}
+.site-header{background:linear-gradient(90deg,var(--accent),#6f8c63);color:white}
+.site-header .container{display:flex;align-items:center;justify-content:space-between;padding:12px;flex-wrap:wrap}
+.logo{margin:0;font-size:18px;flex:1}
+.nav{display:flex;gap:12px;flex-wrap:wrap}
+.nav a, .nav button{color:white;text-decoration:none;background:none;border:none;cursor:pointer;padding:6px 12px;font-size:14px;transition:.2s}
+.nav a:hover, .nav button:hover{opacity:0.8}
+.nav button.active{border-bottom:2px solid white}
+.hero{padding:36px 0;text-align:left}
+.hero-inner{flex:1}
+.hero-cta{margin-top:12px}
+.hero-aside{margin-top:20px;padding:16px;background:var(--card);border-radius:8px}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+.card{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,0.06)}
+.btn{display:inline-block;margin-top:12px;padding:8px 12px;background:var(--accent);color:white;border:none;border-radius:6px;text-decoration:none;cursor:pointer;font-size:14px;transition:.2s}
+.btn:hover{opacity:0.9}
+.btn.outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.btn.outline:hover{background:rgba(74,122,92,0.1)}
+.section{padding:28px 0}
+.section-title{font-size:24px;margin-bottom:12px}
+.lead{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.events{list-style:none;padding:0}
+.events li{background:var(--card);padding:10px;border-radius:6px;margin-bottom:8px;box-shadow:0 4px 10px rgba(0,0,0,0.04)}
+.grid.members{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.member-card{background:var(--card);padding:12px;border-radius:8px;text-align:center}
+.member-card img{width:80px;height:80px;border-radius:50%;object-fit:cover}
+.sub-nav{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
+.sub-nav a{text-decoration:none;color:var(--accent);padding:6px 10px;border-radius:6px;background:rgba(74,122,92,0.08)}
+.sub-section{background:var(--card);padding:14px;border-radius:8px;margin-bottom:12px}
+.site-footer{padding:18px 0;text-align:center;color:var(--muted)}
+.page{display:none}
+.page.active{display:block}
+.inline-form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.inline-form input, .inline-form select, .inline-form textarea{padding:8px;border:1px solid rgba(0,0,0,0.1);border-radius:6px;font-size:14px}
+.reminder-clock{font-weight:700;font-size:20px;margin-bottom:8px}
+.reminder-list{margin-top:10px}
+.reminder-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:8px;border-radius:6px;margin-bottom:8px;gap:8px}
+.reminder-item > div:first-child{flex:1}
+.reminder-item > div:last-child{display:flex;gap:4px;flex-wrap:wrap}
+.profile-card{display:flex;gap:12px;align-items:center;background:var(--card);padding:12px;border-radius:8px}
+.profile-card img{width:72px;height:72px;border-radius:50%;object-fit:cover}
+.members-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:8px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,0.04)}
+.members-table caption{padding:12px 16px;font-weight:700;text-align:left}
+.members-table thead th{background:rgba(0,0,0,0.04);padding:10px 12px;text-align:left;font-weight:700}
+.members-table tbody td{padding:10px 12px;border-top:1px solid rgba(0,0,0,0.04)}
+.members-table tbody tr:nth-child(even){background:rgba(0,0,0,0.02)}
+@media(max-width:600px){
+  .members-table thead{display:none}
+  .members-table, .members-table tbody, .members-table tr, .members-table td{display:block;width:100%}
+  .members-table tr{margin-bottom:12px}
+  .members-table td{padding:8px;border-top:0}
+  .members-table td:before{content:attr(data-label);font-weight:700;display:block;margin-bottom:4px}
+}
+.modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .22s ease, visibility .22s ease}
+.modal[aria-hidden="false"]{visibility:visible;opacity:1;pointer-events:auto}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.4);opacity:0;transition:opacity .22s ease}
+.modal[aria-hidden="false"] .modal-backdrop{opacity:1}
+.modal-content{position:relative;width:100%;max-width:520px;background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.25);z-index:61;transform:translateY(10px) scale(0.98);transition:transform .22s cubic-bezier(.2,.9,.3,1), opacity .22s ease;opacity:0}
+.modal[aria-hidden="false"] .modal-content{transform:translateY(0) scale(1);opacity:1}
+.modal-header{padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.06)}
+.modal-body{padding:16px}
+.modal-footer{padding:12px 16px;border-top:1px solid rgba(0,0,0,0.06);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.modal .btn{min-width:88px}
+.modal form .row{margin-bottom:10px}
+.modal form label{display:block;font-weight:600;margin-bottom:6px}
+.modal form input,.modal form select,.modal form textarea{width:100%;padding:8px;border:1px solid rgba(0,0,0,0.08);border-radius:6px;font-size:14px;font-family:inherit}
+.modal :focus{outline:3px solid rgba(74,122,92,0.18);outline-offset:2px}
+.small-muted{color:var(--muted);font-size:13px}
+@media(max-width:700px){.site-header .container{flex-direction:column;align-items:flex-start}.nav{margin-top:8px;width:100%;flex-direction:column}.nav button, .nav a{width:100%;text-align:left}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="logo">Platform Komunitas & Kegiatan Siswa</h1>
+      <nav class="nav">
+        <button class="nav-btn active" data-page="home">Beranda</button>
+        <button class="nav-btn" data-page="komunitas">Komunitas</button>
+        <button class="nav-btn" data-page="kegiatan">Kegiatan</button>
+        <button class="nav-btn" data-page="anggota">Profil</button>
+        <button class="nav-btn" data-page="eskul">Eskul</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+      <section class="hero">
+        <div class="hero-inner">
+          <h2>Temukan Komunitas & Kegiatan yang Tepat</h2>
+          <p class="lead">Cari ekstrakurikuler, komunitas, dan acara sekolah dengan mudah. Daftar, lihat jadwal, dan kelola pendaftaran semua di satu tempat.</p>
+          <div class="hero-cta">
+            <button class="btn nav-btn" data-page="komunitas">Jelajahi Komunitas</button>
+            <button class="btn nav-btn outline" data-page="eskul">Daftar Eskul</button>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="quick-card">
+            <h4>Jam Pengingat</h4>
+            <div id="reminder-app"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h3 class="section-title">Fitur Utama</h3>
+        <div class="feature-grid">
+          <article class="card">
+            <h4>Komunitas</h4>
+            <p>Temukan kelompok belajar dan komunitas minat khusus.</p>
+            <button class="btn nav-btn" data-page="komunitas">Lihat</button>
+          </article>
+          <article class="card">
+            <h4>Kegiatan</h4>
+            <p>Agenda kegiatan dan pendaftaran acara sekolah.</p>
+            <button class="btn nav-btn" data-page="kegiatan">Lihat</button>
+          </article>
+          <article class="card">
+            <h4>Profil</h4>
+            <p>Kelola profil dan informasi keanggotaan.</p>
+            <button class="btn nav-btn" data-page="anggota">Lihat</button>
+          </article>
+          <article class="card">
+            <h4>Eskul</h4>
+            <p>Info eskul, jadwal, dan pendaftaran langsung.</p>
+            <button class="btn nav-btn" data-page="eskul">Lihat</button>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <!-- KOMUNITAS PAGE -->
+    <div id="page-komunitas" class="page">
+      <h2>Komunitas</h2>
+      <p class="lead">Temukan dan kelola komunitas minat khusus.</p>
+      <h3>Daftar Komunitas (Editable)</h3>
+      <div id="communityList" class="cards"></div>
+    </div>
+
+    <!-- KEGIATAN PAGE -->
+    <div id="page-kegiatan" class="page">
+      <h2>Kalender & Kegiatan</h2>
+      <p class="lead">Lihat kegiatan mendatang dan catat tanggal penting.</p>
+      <h3>Daftar Kegiatan (Editable)</h3>
+      <div id="activitiesList" class="cards"></div>
+    </div>
+
+    <!-- ANGGOTA PAGE -->
+    <div id="page-anggota" class="page">
+      <h2>Profil & Anggota</h2>
+      <h3>Akun Saya</h3>
+      <div id="profile-app"></div>
+      <h3 style="margin-top:24px">Daftar Anggota</h3>
+      <table class="members-table">
+        <caption>Anggota Komunitas & Kegiatan</caption>
+        <thead>
+          <tr><th>No</th><th>Nama</th><th>Peran</th></tr>
+        </thead>
+        <tbody id="membersList">
+          <tr><td>1</td><td>Budi Santoso</td><td>Pembina Robotika</td></tr>
+          <tr><td>2</td><td>Siti Aminah</td><td>Pembina Seni</td></tr>
+          <tr><td>3</td><td>Ahmad Wijaya</td><td>Anggota Komunitas Robotika</td></tr>
+          <tr><td>4</td><td>Eka Putri</td><td>Anggota Klub Literasi</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ESKUL PAGE -->
+    <div id="page-eskul" class="page">
+      <h2>Ekstrakurikuler (Eskul)</h2>
+      <p class="lead">Informasi lengkap tentang ekstrakurikuler, jadwal latihan, dan cara bergabung.</p>
+
+      <section class="sub-section">
+        <h3>Daftar Eskul (Editable)</h3>
+        <p class="small-muted">Daftar eskul di bawah dapat ditambah atau dihapus.</p>
+        <div id="eskulList" class="cards"></div>
+      </section>
+
+      <section class="sub-section">
+        <h3>Form Pendaftaran Eskul</h3>
+        <form id="formEskulRegister">
+          <label>Nama Siswa<br><input name="studentName" required></label><br>
+          <label>Kelas<br><input name="kelas" required placeholder="contoh: 11 IPA 2"></label><br>
+          <label>Pilih Eskul<br>
+            <select name="eskulId" required>
+              <option value="">-- pilih --</option>
+            </select>
+          </label><br>
+          <label>Catatan / Alasan (opsional)<br><textarea name="note" rows="2"></textarea></label><br>
+          <div style="margin-top:8px">
+            <button class="btn" type="submit">Daftar</button>
+          </div>
+        </form>
+
+        <h4 style="margin-top:12px">Pendaftar</h4>
+        <div id="eskulRegistrations"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">© 2025 - Platform Komunitas & Kegiatan Siswa</div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="appModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <header class="modal-header"><h3 id="modalTitle"></h3></header>
+      <div id="modalBody" class="modal-body"></div>
+      <footer class="modal-footer">
+        <button id="modalCancel" class="btn outline">Batal</button>
+        <button id="modalConfirm" class="btn">OK</button>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+// Simple client-side app: profile, reminders, and data lists
+(function(){
+  'use strict';
+  const LS = {
+    profile: 'pk_profile',
+    reminders: 'pk_reminders',
+    eskul: 'pk_eskul',
+    eskulRegs: 'pk_eskul_regs',
+    kegiatan: 'pk_kegiatan',
+    komunitas: 'pk_komunitas'
+  };
+
+  // helpers
+  const $ = (s,root=document)=> root.querySelector(s);
+  const $$ = (s,root=document)=> Array.from(root.querySelectorAll(s));
+  const nowTime = ()=> new Date().toTimeString().slice(0,5);
+  const escapeHtml = (str='')=> String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+  // Modal helper
+  const modalState = {el:null,title:null,body:null,confirm:null,cancel:null,currentOnConfirm:null,prevFocus:null,keydownHandler:null};
+  function initModal(){
+    if(modalState.el) return;
+    modalState.el = document.getElementById('appModal'); if(!modalState.el) return;
+    modalState.title = modalState.el.querySelector('#modalTitle');
+    modalState.body = modalState.el.querySelector('#modalBody');
+    modalState.confirm = modalState.el.querySelector('#modalConfirm');
+    modalState.cancel = modalState.el.querySelector('#modalCancel');
+    modalState.cancel.addEventListener('click', hideModal);
+    modalState.el.addEventListener('click', (e)=>{ if(e.target===modalState.el || e.target.classList.contains('modal-backdrop')) hideModal(); });
+  }
+  function _getFocusable(root){
+    if(!root) return [];
+    const sel = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+    return Array.from(root.querySelectorAll(sel)).filter(n=> n.offsetWidth>0 || n.offsetHeight>0 || n===document.activeElement);
+  }
+  function showModal({title='', bodyHtml='', confirmText='OK', showCancel=true, onConfirm=null}={}){
+    initModal(); if(!modalState.el) return;
+    modalState.prevFocus = document.activeElement;
+    modalState.title.textContent = title||'';
+    modalState.body.innerHTML = bodyHtml||'';
+    modalState.confirm.textContent = confirmText||'OK';
+    modalState.cancel.style.display = showCancel ? '' : 'none';
+    modalState.el.setAttribute('aria-hidden','false');
+    const dialog = modalState.el.querySelector('.modal-content'); if(dialog) dialog.setAttribute('aria-modal','true');
+    modalState.currentOnConfirm = onConfirm;
+    modalState.confirm.onclick = ()=>{
+      try{ if(typeof modalState.currentOnConfirm === 'function') modalState.currentOnConfirm(); }catch(e){console.error(e);} 
+      hideModal();
+    };
+    const focusables = _getFocusable(modalState.el);
+    (focusables[0] || modalState.confirm || modalState.cancel).focus();
+    modalState.keydownHandler = function(e){
+      if(e.key === 'Escape'){
+        e.preventDefault(); hideModal(); return;
+      }
+      if(e.key === 'Tab'){
+        const f = _getFocusable(modalState.el);
+        if(f.length===0) { e.preventDefault(); return; }
+        const first = f[0], last = f[f.length-1];
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', modalState.keydownHandler);
+  }
+  function hideModal(){ if(!modalState.el) return; modalState.el.setAttribute('aria-hidden','true'); modalState.body.innerHTML=''; modalState.currentOnConfirm = null; modalState.confirm.onclick = null; if(modalState.keydownHandler) { document.removeEventListener('keydown', modalState.keydownHandler); modalState.keydownHandler = null; } try{ if(modalState.prevFocus && typeof modalState.prevFocus.focus === 'function') modalState.prevFocus.focus(); }catch(e){}
+  }
+
+  // Default data
+  const defaultEskul = [
+    {id:1,name:'Robotika',when:'Rabu & Jumat',contact:'pembina_robotika@sekolah.id', creator:'Budi Santoso'},
+    {id:2,name:'Pentas Seni',when:'Senin & Kamis',contact:'pembina_seni@sekolah.id', creator:'Siti Aminah'}
+  ];
+  const defaultKegiatan = [
+    {id:1,title:'Diskusi Buku',date:'2025-11-15'},
+    {id:2,title:'Turnamen Sepak Bola',date:'2025-11-28'}
+  ];
+  const defaultKomunitas = [
+    {id:1,name:'Komunitas Robotika',desc:'Belajar robot & coding.'},
+    {id:2,name:'Klub Literasi',desc:'Diskusi buku & penulisan.'}
+  ];
+
+  // localStorage helpers
+  function read(key, fallback){
+    try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback}catch(e){return fallback}
+  }
+  function write(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+  // Profile
+  function renderProfileApp(){
+    const el = $('#profile-app'); if(!el) return;
+    const profile = read(LS.profile, {name:'',email:'',avatar:''});
+    el.innerHTML = `
+      <div class="profile-card">
+        <div>
+          <div><strong id="profileName">${profile.name||'Belum ada nama'}</strong></div>
+          <div class="small-muted" id="profileEmail">${profile.email||'Belum ada email'}</div>
+          <div style="margin-top:8px">
+            <button id="editProfileBtn" class="btn">Edit Profil</button>
+          </div>
+        </div>
+      </div>
+      <div id="profileFormWrap" style="margin-top:12px"></div>
+    `;
+    $('#editProfileBtn').addEventListener('click', ()=> showProfileForm(profile));
+  }
+  function showProfileForm(profile){
+    const wrap = $('#profileFormWrap'); if(!wrap) return;
+    wrap.innerHTML = `
+      <form id="profileForm">
+        <label>Nama<br><input name="name" value="${profile.name||''}"></label><br>
+        <label>Email<br><input name="email" value="${profile.email||''}"></label><br>
+        <label>Avatar URL<br><input name="avatar" value="${profile.avatar||''}"></label><br>
+        <div style="margin-top:8px">
+          <button type="submit" class="btn">Simpan</button>
+          <button type="button" id="cancelProfile" class="btn outline">Batal</button>
+        </div>
+      </form>
+    `;
+    $('#profileForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const f = new FormData(e.target);
+      const p = {name:f.get('name'), email:f.get('email'), avatar:f.get('avatar')};
+      write(LS.profile, p);
+      renderProfileApp();
+    });
+    $('#cancelProfile').addEventListener('click', ()=> { wrap.innerHTML=''; });
+  }
+
+  // Reminders
+  function renderReminderApp(){
+    const el = $('#reminder-app'); if(!el) return;
+    const reminders = read(LS.reminders, []);
+    el.innerHTML = `
+      <div class="reminder-clock" id="clock">Waktu sekarang: ${nowTime()}</div>
+      <form id="remForm">
+        <input type="time" name="time" required> <input name="msg" placeholder="Pesan (contoh: Latihan Robot)"> <button class="btn" type="submit">Tambah</button>
+      </form>
+      <div class="reminder-list" id="remList"></div>
+      <audio id="alarmAudio" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+    `;
+    const clock = $('#clock');
+    setInterval(()=>{ if(clock) clock.textContent = 'Waktu sekarang: '+nowTime(); },1000);
+    $('#remForm').addEventListener('submit', (e)=>{
+      e.preventDefault(); const fd=new FormData(e.target); const time=fd.get('time'); const msg=fd.get('msg')||'Pengingat';
+      const item = {id:Date.now(), time, msg, fired:false};
+      reminders.push(item); write(LS.reminders, reminders); renderReminderList(); e.target.reset();
+    });
+    function renderReminderList(){
+      const listEl = $('#remList'); if(!listEl) return; listEl.innerHTML='';
+      (read(LS.reminders,[])||[]).forEach(r=>{
+        const div = document.createElement('div'); div.className='reminder-item';
+        div.innerHTML = `<div>${r.time} — <strong>${r.msg}</strong></div><div><button data-id="${r.id}" class="btn outline del-rem">Hapus</button></div>`;
+        listEl.appendChild(div);
+      });
+      $$('.del-rem').forEach(b=> b.addEventListener('click', ()=>{ const id=b.dataset.id; const arr=read(LS.reminders,[]).filter(x=>x.id!=id); write(LS.reminders,arr); renderReminderList(); }));
+    }
+    renderReminderList();
+
+    setInterval(()=>{
+      const arr = read(LS.reminders,[]);
+      const t = nowTime();
+      let changed=false;
+      arr.forEach(r=>{
+        if(!r.fired && r.time===t){
+          r.fired=true; changed=true;
+          try{ if(Notification && Notification.permission==='granted'){ new Notification('Pengingat', {body:r.msg}); } }
+          catch(e){}
+          const aud = document.getElementById('alarmAudio'); if(aud){ aud.currentTime=0; aud.play().catch(()=>{}); }
+          alert('Pengingat: '+r.msg+' ('+r.time+')');
+        }
+      });
+      if(changed) write(LS.reminders, arr);
+    },15000);
+
+    if('Notification' in window && Notification.permission!=='granted'){
+      Notification.requestPermission().catch(()=>{});
+    }
+  }
+
+  // Data lists and renderers for eskul/kegiatan/komunitas
+  function ensureDefaults(){ if(!localStorage.getItem(LS.eskul)) write(LS.eskul, defaultEskul); if(!localStorage.getItem(LS.kegiatan)) write(LS.kegiatan, defaultKegiatan); if(!localStorage.getItem(LS.komunitas)) write(LS.komunitas, defaultKomunitas); }
+
+  function renderListIfPresent(containerId, lsKey, renderFn, addForm=false){
+    const el = document.getElementById(containerId); if(!el) return;
+    ensureDefaults();
+    const arr = read(lsKey,[]);
+    el.innerHTML = '';
+    if(addForm){
+      const form = document.createElement('form'); form.className='inline-form';
+      form.innerHTML = (lsKey===LS.eskul)?
+        '<input name="name" placeholder="Nama eskul"> <input name="when" placeholder="Jadwal"> <div><input name="creator" placeholder="Nama pembuat"></div> <div style="margin-top:8px"><button class="btn" type="submit">Tambah</button></div>' :
+        (lsKey===LS.kegiatan)? '<div><input name="title" placeholder="Judul kegiatan"></div><div><input name="date" type="date"></div><div style="margin-top:8px"><button class="btn" type="submit">Tambah</button></div>' : '<div><input name="name" placeholder="Nama komunitas"></div><div><input name="desc" placeholder="Deskripsi"></div><div style="margin-top:8px"><button class="btn" type="submit">Tambah</button></div>';
+      form.addEventListener('submit',(e)=>{ 
+        e.preventDefault(); 
+        const f=new FormData(e.target); 
+        if(lsKey===LS.eskul){
+          const name = (f.get('name')||'').trim();
+          const when = (f.get('when')||'').trim();
+          const creator = (f.get('creator')||'').trim();
+          const MAX_NAME = 60;
+          const MAX_CREATOR = 50;
+          if(!name){ alert('Nama eskul wajib diisi.'); return; }
+          if(name.length > MAX_NAME){ alert('Nama eskul terlalu panjang (maks '+MAX_NAME+' karakter).'); return; }
+          if(!creator){ alert('Nama pembuat wajib diisi.'); return; }
+          if(creator.length > MAX_CREATOR){ alert('Nama pembuat terlalu panjang (maks '+MAX_CREATOR+' karakter).'); return; }
+          const exists = (arr||[]).some(x=> String(x.name||'').trim().toLowerCase() === name.toLowerCase());
+          if(exists){ alert('Eskul dengan nama tersebut sudah ada. Gunakan nama lain.'); return; }
+          const item = {id:Date.now(), name, when, creator};
+          arr.push(item); write(lsKey,arr); renderListIfPresent(containerId,lsKey,renderFn,addForm); e.target.reset();
+          return;
+        }
+        const item = (lsKey===LS.kegiatan)? {id:Date.now(), title:f.get('title'), date:f.get('date')} : {id:Date.now(), name:f.get('name'), desc:f.get('desc')}; 
+        arr.push(item); write(lsKey,arr); renderListIfPresent(containerId,lsKey,renderFn,addForm); e.target.reset(); 
+      });
+      el.appendChild(form);
+    }
+    arr.forEach(a=> el.appendChild(renderFn(a)));
+
+    if(lsKey===LS.eskul){
+      $$('.del-eskul', el).forEach(b=> b.addEventListener('click', ()=>{
+          const id = b.dataset.id;
+          showModal({title:'Hapus Eskul', bodyHtml:'<p>Yakin ingin menghapus eskul ini? Semua pendaftar terkait juga akan dihapus.</p>', confirmText:'Hapus', showCancel:true, onConfirm: ()=>{
+            const remaining = read(LS.eskul,[]).filter(x=> String(x.id)!==String(id));
+            write(LS.eskul, remaining);
+            const regs = read(LS.eskulRegs,[]).filter(r=> String(r.eskulId)!==String(id));
+            if(regs.length !== read(LS.eskulRegs,[]).length){
+              const keep = read(LS.eskulRegs,[]).filter(r=> String(r.eskulId)!==String(id));
+              write(LS.eskulRegs, keep);
+            }
+            renderListIfPresent(containerId, lsKey, renderFn, addForm);
+            try{ renderEskulRegistrationForm(); renderEskulRegistrations(); }catch(e){}
+          }});
+        }));
+    }
+    if(lsKey===LS.komunitas){
+      $$('.del-kom', el).forEach(b=> b.addEventListener('click', ()=>{
+        const id = b.dataset.id;
+        showModal({title:'Hapus Komunitas', bodyHtml:'<p>Yakin ingin menghapus komunitas ini?</p>', confirmText:'Hapus', showCancel:true, onConfirm: ()=>{
+          const remaining = read(LS.komunitas,[]).filter(x=> String(x.id)!==String(id));
+          write(LS.komunitas, remaining);
+          renderListIfPresent(containerId, lsKey, renderFn, addForm);
+        }});
+      }));
+
+      $$('.edit-kom', el).forEach(b=> b.addEventListener('click', ()=>{
+        const id = b.dataset.id;
+        const arrK = read(LS.komunitas,[]);
+        const item = arrK.find(x=>String(x.id)===String(id)); if(!item) return;
+        const formHtml = `
+          <form id="editKomForm">
+            <div class="row"><label>Nama Komunitas<input name="name" value="${escapeHtml(item.name)}"></label></div>
+            <div class="row"><label>Deskripsi<textarea name="desc">${escapeHtml(item.desc||'')}</textarea></label></div>
+          </form>`;
+        showModal({title:'Edit Komunitas', bodyHtml:formHtml, confirmText:'Simpan', showCancel:true, onConfirm: ()=>{
+          const form = document.getElementById('editKomForm'); if(!form) return;
+          const f = new FormData(form); const name=(f.get('name')||'').trim(); const desc=(f.get('desc')||'').trim();
+          if(!name){ alert('Nama komunitas wajib diisi.'); return; }
+          const updated = arrK.map(k=> k.id==item.id? Object.assign({}, k, {name, desc}) : k);
+          write(LS.komunitas, updated);
+          renderListIfPresent(containerId, lsKey, renderFn, addForm);
+        }});
+      }));
+    }
+  }
+
+  // Eskul registration: form + registrations list
+  function renderEskulRegistrationForm(){
+    const formWrap = document.getElementById('formEskulRegister'); if(!formWrap) return;
+    const eskuls = read(LS.eskul, []);
+    const sel = formWrap.querySelector('select[name="eskulId"]');
+    if(sel){
+      sel.innerHTML = '<option value="">-- pilih --</option>' + eskuls.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+    }
+    formWrap.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const f = new FormData(e.target);
+      const name = (f.get('studentName')||'').trim();
+      const kelas = (f.get('kelas')||'').trim();
+      const eskulId = f.get('eskulId');
+      const note = (f.get('note')||'').trim();
+      if(!name || !kelas || !eskulId){ alert('Lengkapi semua field yang wajib.'); return; }
+      const regs = read(LS.eskulRegs, []);
+      const esk = eskuls.find(x=>String(x.id)===String(eskulId));
+      const item = {id:Date.now(), studentName:name, kelas, eskulId, eskulName: esk?esk.name:'', eskulCreator: esk? (esk.creator||'') : '', note};
+      regs.push(item); write(LS.eskulRegs, regs);
+      renderEskulRegistrations();
+      e.target.reset();
+      alert('Pendaftaran berhasil untuk ' + name + ' pada eskul ' + (esk?esk.name:''));
+    });
+  }
+
+  function renderEskulRegistrations(){
+    const listWrap = document.getElementById('eskulRegistrations'); if(!listWrap) return;
+    const regs = read(LS.eskulRegs, []);
+    listWrap.innerHTML = '';
+    if(!regs.length){ listWrap.innerHTML = '<p class="small-muted">Belum ada pendaftar.</p>'; return }
+    regs.forEach(r=>{
+      const d = document.createElement('div'); d.className='reminder-item';
+      d.innerHTML = `<div><strong>${escapeHtml(r.studentName)}</strong> — ${escapeHtml(r.kelas)} • <em>${escapeHtml(r.eskulName)}</em>${r.eskulCreator? ' <span class="small-muted">(pembuat: '+escapeHtml(r.eskulCreator)+')</span>':''}<div class="small-muted">${escapeHtml(r.note||'')}</div></div><div><button data-id="${r.id}" class="btn outline edit-reg">Edit</button> <button data-id="${r.id}" class="btn outline del-reg">Hapus</button></div>`;
+      listWrap.appendChild(d);
+    });
+    $$('.del-reg').forEach(b=> b.addEventListener('click', ()=>{
+      const id = b.dataset.id;
+      showModal({title:'Hapus Pendaftaran', bodyHtml:`<p>Yakin ingin menghapus pendaftaran ini?</p>`, confirmText:'Hapus', showCancel:true, onConfirm: ()=>{
+        const arr = read(LS.eskulRegs,[]).filter(x=>x.id!=id);
+        write(LS.eskulRegs,arr);
+        renderEskulRegistrations();
+      }});
+    }));
+    $$('.edit-reg').forEach(b=> b.addEventListener('click', ()=>{
+      const id = b.dataset.id;
+      const regs = read(LS.eskulRegs,[]);
+      const reg = regs.find(x=>String(x.id)===String(id)); if(!reg) return;
+      const eskuls = read(LS.eskul,[]);
+      const options = eskuls.map(e=>`<option value="${e.id}" ${String(e.id)===String(reg.eskulId)?'selected':''}>${escapeHtml(e.name)}</option>`).join('');
+      const formHtml = `
+        <form id="editRegForm">
+          <div class="row"><label>Nama Siswa<input name="studentName" value="${escapeHtml(reg.studentName)}"></label></div>
+          <div class="row"><label>Kelas<input name="kelas" value="${escapeHtml(reg.kelas)}"></label></div>
+          <div class="row"><label>Pilih Eskul<select name="eskulId">${options}</select></label></div>
+          <div class="row"><label>Catatan<textarea name="note">${escapeHtml(reg.note||'')}</textarea></label></div>
+        </form>`;
+      showModal({title:'Edit Pendaftaran', bodyHtml:formHtml, confirmText:'Simpan', showCancel:true, onConfirm: ()=>{
+        const form = document.getElementById('editRegForm'); if(!form) return;
+        const f = new FormData(form);
+        const studentName = (f.get('studentName')||'').trim(); const kelas = (f.get('kelas')||'').trim(); const eskulId = f.get('eskulId'); const note = (f.get('note')||'').trim();
+        if(!studentName || !kelas || !eskulId){ alert('Lengkapi semua field yang wajib.'); return; }
+        const esk = eskuls.find(x=>String(x.id)===String(eskulId));
+        const updated = regs.map(r=> r.id==reg.id? Object.assign({}, r, {studentName, kelas, eskulId, eskulName: esk?esk.name:'', eskulCreator: esk? (esk.creator||'') : '', note }) : r);
+        write(LS.eskulRegs, updated);
+        renderEskulRegistrations();
+        renderEskulRegistrationForm();
+      }});
+    }));
+  }
+
+  function eskulCard(it){ const d=document.createElement('article'); d.className='card'; d.innerHTML=`<h4>${it.name}</h4><p>${it.when}</p><p class="small-muted">${it.contact? it.contact + ' • ' : ''}${it.creator? 'Pembuat: '+it.creator : ''}</p><div><button class="btn outline del-eskul" data-id="${it.id}">Hapus</button></div>`; return d; }
+  function kegiatanCard(it){ const d=document.createElement('article'); d.className='card'; d.innerHTML=`<h4>${it.title}</h4><p class="small-muted">${it.date}</p>`; return d; }
+  function komunitasCard(it){ const d=document.createElement('article'); d.className='card'; d.innerHTML=`<h4>${it.name}</h4><p>${it.desc}</p><div><button class="btn outline edit-kom" data-page="" data-id="${it.id}">Edit</button> <button class="btn outline del-kom" data-id="${it.id}">Hapus</button></div>`; return d; }
+
+  // Page navigation
+  function setupPageNav(){
+    $$('.nav-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const page = btn.dataset.page;
+        if(!page) return;
+        $$('.page').forEach(p=> p.classList.remove('active'));
+        $$('.nav-btn').forEach(b=> b.classList.remove('active'));
+        const pageEl = document.getElementById('page-'+page);
+        if(pageEl) pageEl.classList.add('active');
+        btn.classList.add('active');
+        window.scrollTo(0, 0);
+      });
+    });
+  }
+
+  // On DOM ready
+  document.addEventListener('DOMContentLoaded', ()=>{
+    initModal();
+    renderProfileApp();
+    renderReminderApp();
+    renderListIfPresent('eskulList', LS.eskul, eskulCard, true);
+    renderListIfPresent('activitiesList', LS.kegiatan, kegiatanCard, true);
+    renderListIfPresent('communityList', LS.komunitas, komunitasCard, true);
+    renderEskulRegistrationForm();
+    renderEskulRegistrations();
+    setupPageNav();
+  });
+
+})();
+  </script>
+</body>
+</html>
